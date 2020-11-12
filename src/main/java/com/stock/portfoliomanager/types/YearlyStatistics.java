@@ -21,4 +21,5 @@ public class YearlyStatistics {
     private List<TransactionEntity> transactions;
 
 
+
 }
