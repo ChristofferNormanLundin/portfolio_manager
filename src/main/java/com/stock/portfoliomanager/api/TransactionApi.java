@@ -6,7 +6,6 @@ import com.stock.portfoliomanager.types.Transaction;
 import com.stock.portfoliomanager.utils.ObjectConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,11 +18,13 @@ public class TransactionApi {
     @Autowired
     ObjectConverter objectConverter;
 
-    public TransactionEntity save(Transaction transaction) {
-        TransactionEntity entity = objectConverter.getTransactionEntity(transaction);
-        transactionRepository.save(entity);
-        return entity;
+    public List<TransactionEntity> save(Transaction transaction) {
+        List<TransactionEntity> entities = objectConverter.getTransactionEntities(transaction);
+        return entities.stream()
+                .map(transactionEntity -> transactionRepository.save(transactionEntity))
+                .collect(Collectors.toList());
     }
+
 
     public List<TransactionEntity> findTransactionsByPortfolioId(int portfolioId, int year) {
         return transactionRepository.findByPortfolioId(portfolioId).stream()

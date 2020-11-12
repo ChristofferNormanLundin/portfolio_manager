@@ -10,6 +10,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import java.util.List;
 
 @Controller
 @RequestMapping("/transaction")
@@ -19,8 +20,8 @@ public class TransactionController {
     TransactionApi transactionApi;
 
     @RequestMapping(value = "/", method = RequestMethod.POST)
-    public ResponseEntity<TransactionEntity> createPortfolio(@Validated @RequestBody Transaction transaction) {
-        TransactionEntity entity = transactionApi.save(transaction);
-        return ResponseEntity.ok(entity);
+    public ResponseEntity<List<TransactionEntity>> createTransaction(@Validated @RequestBody Transaction transaction) {
+        List<TransactionEntity> entities = transactionApi.save(transaction);
+        return ResponseEntity.ok(entities);
     }
 }

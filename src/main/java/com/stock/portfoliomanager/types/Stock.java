@@ -6,22 +6,19 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
-import java.time.LocalDate;
-import java.util.List;
 
 @Builder
 @Data
 @Component
 @AllArgsConstructor
 @NoArgsConstructor
-public class Transaction {
-
+public class Stock {
     @NotNull
-    private int portfolioId;
+    private String stockName;
     @NotNull
-    private LocalDate transactionDate;
+    private int quantity;
     @NotNull
-    private TransactionTypes transactionType;
+    private double payedAmount;
     @NotNull
-    private List<Stock> stocks;
+    private Double sellPrice;
 }
