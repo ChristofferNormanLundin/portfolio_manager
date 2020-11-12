@@ -19,7 +19,4 @@ public class YearlyStatistics {
 
     private PortfolioEntity portfolio;
     private List<TransactionEntity> transactions;
-
-
-
 }
