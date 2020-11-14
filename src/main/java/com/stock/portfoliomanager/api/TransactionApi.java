@@ -31,4 +31,7 @@ public class TransactionApi {
                 .filter(transactionEntity -> transactionEntity.getTransactionDate().getYear() == year)
                 .collect(Collectors.toList());
     }
+    public List<TransactionEntity> findTransactionsByPortfolioIdAndStockName(int portfolioId, String stockName) {
+        return transactionRepository.findByPortfolioIdAndStockName(portfolioId, stockName);
+    }
 }

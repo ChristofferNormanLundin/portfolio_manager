@@ -8,8 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.time.LocalDate;
-
 
 @RestController
 @RequestMapping("/year")
@@ -23,4 +21,6 @@ public class YearlyResultController {
         yearlyApi.getYearlyStatisticsForPortfolio(portfolioId, year);
         return ResponseEntity.ok().body(null);
     }
+
+
 }
