@@ -41,6 +41,8 @@ public class StockApi {
                 .earnings(EARNINGS)
                 .stocksLeft(STOCKS_LEFT)
                 .build();
+
+        //TODO set all params to 0 again!
     }
 
 
