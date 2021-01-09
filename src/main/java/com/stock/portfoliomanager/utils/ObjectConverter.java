@@ -6,6 +6,7 @@ import com.stock.portfoliomanager.types.Portfolio;
 import com.stock.portfoliomanager.types.Transaction;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Component;
+
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,9 +29,8 @@ public final class ObjectConverter {
                         TransactionEntity.builder()
                                 .portfolioId(transactions.getPortfolioId())
                                 .quantity(stock.getQuantity())
-                                .sellPrice(stock.getSellPrice())
+                                .amount(stock.getAmount())
                                 .stockName(stock.getStockName())
-                                .payedAmount(stock.getPayedAmount())
                                 .transactionDate(transactions.getTransactionDate())
                                 .transactionType(transactions.getTransactionType())
                                 .createdAt(Timestamp.valueOf(LocalDateTime.now()))

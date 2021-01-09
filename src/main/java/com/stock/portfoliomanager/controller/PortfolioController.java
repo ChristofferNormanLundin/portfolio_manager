@@ -2,9 +2,7 @@ package com.stock.portfoliomanager.controller;
 
 import com.stock.portfoliomanager.api.PortfolioApi;
 import com.stock.portfoliomanager.entity.PortfolioEntity;
-import com.stock.portfoliomanager.database.PortfolioRepository;
 import com.stock.portfoliomanager.types.Portfolio;
-import javassist.NotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,8 +11,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/portfolio")

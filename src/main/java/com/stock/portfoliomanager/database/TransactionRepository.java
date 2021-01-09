@@ -12,4 +12,6 @@ public interface TransactionRepository extends JpaRepository<TransactionEntity, 
 
     List<TransactionEntity> findByPortfolioId(int portfolioId);
 
+    List<TransactionEntity> findByPortfolioIdAndStockName(int portfolioId, String stockName);
+
 }
