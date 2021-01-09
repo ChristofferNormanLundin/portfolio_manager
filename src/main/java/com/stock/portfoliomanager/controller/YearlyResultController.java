@@ -1,6 +1,7 @@
 package com.stock.portfoliomanager.controller;
 
 import com.stock.portfoliomanager.api.YearlyApi;
+import com.stock.portfoliomanager.types.YearlyStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +19,8 @@ public class YearlyResultController {
 
     @RequestMapping(value = "/{year}/{portfolioId}/statistic", method = RequestMethod.GET)
     public ResponseEntity get(@PathVariable int portfolioId, @PathVariable int year) {
-        yearlyApi.getYearlyStatisticsForPortfolio(portfolioId, year);
-        return ResponseEntity.ok().body(null);
+        YearlyStatistics yearlyStatistics = yearlyApi.getYearlyStatisticsForPortfolio(portfolioId, year);
+        return ResponseEntity.ok().body(yearlyStatistics);
     }
 
 }

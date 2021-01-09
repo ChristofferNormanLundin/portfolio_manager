@@ -28,11 +28,18 @@ public class StockApi {
     private double AVERAGE_ACQUISTION_VALUE;
 
     public SpecificStock getSpecificStock(int portfolioId, String stockName) {
-        setValues();
-
         List<TransactionEntity> transactionEntities = transactionApi.findTransactionsByPortfolioIdAndStockName(portfolioId, stockName);
         calculateAmounts(transactionEntities);
 
+        return getSpecificStockObject(stockName);
+    }
+
+    public SpecificStock getSpecifickStock(List<TransactionEntity> transactionEntities) {
+        calculateAmounts(transactionEntities);
+        return getSpecificStockObject(transactionEntities.get(0).getStockName());
+    }
+
+    private SpecificStock getSpecificStockObject(String stockName) {
         return SpecificStock.builder()
                 .name(stockName)
                 .averageAcquisitionValue(AVERAGE_ACQUISTION_VALUE)
@@ -44,6 +51,8 @@ public class StockApi {
     }
 
     private void calculateAmounts(List<TransactionEntity> transactionEntities) {
+        setValues();
+
         transactionEntities.stream()
                 .filter(transactionEntity -> transactionEntity.getTransactionType() == TransactionTypes.BUY)
                 .collect(Collectors.toList()).forEach(transactionEntity -> {

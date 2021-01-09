@@ -1,7 +1,6 @@
 package com.stock.portfoliomanager.types;
 
 import com.stock.portfoliomanager.entity.PortfolioEntity;
-import com.stock.portfoliomanager.entity.TransactionEntity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,6 +17,6 @@ import java.util.List;
 public class YearlyStatistics {
 
     private PortfolioEntity portfolio;
-    private List<TransactionEntity> transactions;
+    private List<SpecificStock> specificStocks;
 
 }
