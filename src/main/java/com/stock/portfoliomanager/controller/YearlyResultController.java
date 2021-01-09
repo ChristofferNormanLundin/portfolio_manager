@@ -22,5 +22,4 @@ public class YearlyResultController {
         return ResponseEntity.ok().body(null);
     }
 
-
 }

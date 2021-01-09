@@ -18,7 +18,5 @@ public class Stock {
     @NotNull
     private int quantity;
     @NotNull
-    private double payedAmount;
-    @NotNull
-    private Double sellPrice;
+    private double amount;
 }

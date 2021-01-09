@@ -15,8 +15,8 @@ public class SpecificStock {
 
     private String name;
     private double averageAcquisitionValue;
-    private double payedAmount;
-    private double sellAmount;
+    private double payed;
+    private double sold;
     private double earnings;
     private int stocksLeft;
 }

@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -39,10 +40,8 @@ public class TransactionEntity implements Serializable {
     private String stockName;
     @Column(name="quantity")
     private int quantity;
-    @Column(name="payed_amount")
-    private double payedAmount;
-    @Column(name="sell_price")
-    private Double sellPrice;
+    @Column(name = "amount")
+    private double amount;
     @Column(name="created_at")
     private Timestamp createdAt;
     @Column(columnDefinition = "ENUM('BUY', 'SELL')")

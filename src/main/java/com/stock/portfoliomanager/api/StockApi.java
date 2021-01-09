@@ -19,38 +19,35 @@ public class StockApi {
     @Autowired
     Utils utils;
 
-    private double PAYED_AMOUNT = 0;
-    private double SELL_AMOUNT = 0;
-    private int STOCK_AMOUNT = 0;
-    private int SOLD_STOCK_AMOUNT = 0;
-    private int STOCKS_LEFT = 0;
-    private double EARNINGS = 0;
-
-
-    private double AVERAGE_ACQUISTION_VALUE = 0;
+    private double PAYED_AMOUNT;
+    private double SELL_AMOUNT;
+    private int STOCK_AMOUNT;
+    private int SOLD_STOCK_AMOUNT;
+    private int STOCKS_LEFT;
+    private double EARNINGS;
+    private double AVERAGE_ACQUISTION_VALUE;
 
     public SpecificStock getSpecificStock(int portfolioId, String stockName) {
+        setValues();
+
         List<TransactionEntity> transactionEntities = transactionApi.findTransactionsByPortfolioIdAndStockName(portfolioId, stockName);
         calculateAmounts(transactionEntities);
 
         return SpecificStock.builder()
                 .name(stockName)
                 .averageAcquisitionValue(AVERAGE_ACQUISTION_VALUE)
-                .payedAmount(PAYED_AMOUNT)
-                .sellAmount(SELL_AMOUNT)
+                .payed(PAYED_AMOUNT)
+                .sold(SELL_AMOUNT)
                 .earnings(EARNINGS)
                 .stocksLeft(STOCKS_LEFT)
                 .build();
-
-        //TODO set all params to 0 again!
     }
-
 
     private void calculateAmounts(List<TransactionEntity> transactionEntities) {
         transactionEntities.stream()
                 .filter(transactionEntity -> transactionEntity.getTransactionType() == TransactionTypes.BUY)
                 .collect(Collectors.toList()).forEach(transactionEntity -> {
-            PAYED_AMOUNT += transactionEntity.getPayedAmount();
+            PAYED_AMOUNT += transactionEntity.getAmount();
             STOCK_AMOUNT += transactionEntity.getQuantity();
         });
 
@@ -60,11 +57,21 @@ public class StockApi {
                 .filter(transactionEntity -> transactionEntity.getTransactionType() == TransactionTypes.SELL)
                 .collect(Collectors.toList())
                 .forEach(transactionEntity -> {
-                    SELL_AMOUNT += transactionEntity.getSellPrice();
+                    SELL_AMOUNT += transactionEntity.getAmount();
                     SOLD_STOCK_AMOUNT += transactionEntity.getQuantity();
                 });
 
         EARNINGS = (SELL_AMOUNT - PAYED_AMOUNT);
         STOCKS_LEFT = STOCK_AMOUNT - SOLD_STOCK_AMOUNT;
+    }
+
+    private void setValues() {
+        PAYED_AMOUNT = 0;
+        SELL_AMOUNT = 0;
+        STOCK_AMOUNT = 0;
+        SOLD_STOCK_AMOUNT = 0;
+        STOCKS_LEFT = 0;
+        EARNINGS = 0;
+        AVERAGE_ACQUISTION_VALUE = 0;
     }
 }
