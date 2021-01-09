@@ -19,5 +19,6 @@ public class YearlyStatistics {
     private PortfolioEntity portfolio;
     private List<SpecificStock> specificStocks;
     private double invested;
+    private int year;
 
 }

@@ -2,6 +2,7 @@ package com.stock.portfoliomanager.api;
 
 import com.stock.portfoliomanager.entity.PortfolioEntity;
 import com.stock.portfoliomanager.entity.TransactionEntity;
+import com.stock.portfoliomanager.pdf.PdfBuilder;
 import com.stock.portfoliomanager.types.SpecificStock;
 import com.stock.portfoliomanager.types.YearlyStatistics;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class YearlyApi {
     @Autowired
     StockApi stockApi;
 
+    @Autowired
+    PdfBuilder pdfBuilder;
+
     public YearlyStatistics getYearlyStatisticsForPortfolio(int portfolioId, int year) {
         PortfolioEntity portfolio = portfolioApi.getPortfolio(portfolioId);
         List<TransactionEntity> transactions = transactionApi.findTransactionsByPortfolioId(portfolioId);
@@ -32,6 +36,7 @@ public class YearlyApi {
                 .portfolio(portfolio)
                 .specificStocks(specificStocks)
                 .invested(totalInvested(specificStocks))
+                .year(year)
                 .build();
     }
 
@@ -69,5 +74,10 @@ public class YearlyApi {
             }
         }
         return specificStocks;
+    }
+
+    public void getStatisticsAsPdf(int portfolioId, int year) {
+        YearlyStatistics yearlyStatistics = getYearlyStatisticsForPortfolio(portfolioId, year);
+        pdfBuilder.createYearlyStatisticsPdf(yearlyStatistics);
     }
 }
