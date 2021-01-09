@@ -25,16 +25,25 @@ public class YearlyApi {
 
     public YearlyStatistics getYearlyStatisticsForPortfolio(int portfolioId, int year) {
         PortfolioEntity portfolio = portfolioApi.getPortfolio(portfolioId);
-        List<TransactionEntity> transactions = transactionApi.findTransactionsByPortfolioId(portfolioId, year);
-        List<SpecificStock> specificStocks = calulateBoughtAndSold(transactions);
+        List<TransactionEntity> transactions = transactionApi.findTransactionsByPortfolioId(portfolioId);
+        List<SpecificStock> specificStocks = calulateBoughtAndSold(transactions, year);
 
         return YearlyStatistics.builder()
                 .portfolio(portfolio)
                 .specificStocks(specificStocks)
+                .invested(totalInvested(specificStocks))
                 .build();
     }
 
-    private List<SpecificStock> calulateBoughtAndSold(List<TransactionEntity> transactions) {
+    private double totalInvested(List<SpecificStock> specificStocks) {
+        double invested = 0;
+        for (SpecificStock s : specificStocks) {
+            invested += s.getPayed();
+        }
+        return invested;
+    }
+
+    private List<SpecificStock> calulateBoughtAndSold(List<TransactionEntity> transactions, int year) {
         List<SpecificStock> specificStocks = new ArrayList<>();
         List<String> memory = new ArrayList<>();
 
@@ -42,12 +51,21 @@ public class YearlyApi {
             if (!memory.contains(transaction.getStockName())) {
                 memory.add(transaction.getStockName());
 
+                //Filter all transactions on the stock name
+                //that is before and up to this year.
                 List<TransactionEntity> stocks = transactions.stream()
-                        .filter(stock -> stock.getStockName().equals(transaction.getStockName()))
+                        .filter(stock -> stock.getStockName().equals(transaction.getStockName())
+                                && stock.getTransactionDate().getYear() <= year)
                         .collect(Collectors.toList());
 
-                specificStocks.add(stockApi.getSpecifickStock(stocks));
+                //Check that atleast one of the trades is from requested year
+                boolean result = stocks.stream()
+                        .filter(stock -> stock.getTransactionDate().getYear() == year)
+                        .collect(Collectors.toList()).size() > 1;
 
+                if (result) {
+                    specificStocks.add(stockApi.getSpecifickStock(stocks));
+                }
             }
         }
         return specificStocks;
