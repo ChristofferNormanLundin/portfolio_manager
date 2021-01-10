@@ -1,14 +1,10 @@
 package com.stock.portfoliomanager.pdf;
 
-import com.itextpdf.text.BadElementException;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
 import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.stock.portfoliomanager.types.YearlyStatistics;
@@ -16,19 +12,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URISyntaxException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.util.stream.Stream;
+import java.util.List;
 
 @Component
 public class PdfBuilder {
 
     @Autowired
     PdfComponents components;
-
-    private final String SPACE = " ";
 
     public void createYearlyStatisticsPdf(YearlyStatistics statistics) {
         createDocument(statistics);
@@ -38,21 +28,13 @@ public class PdfBuilder {
 
         try {
             Document document = new Document();
-            PdfWriter.getInstance(document, new FileOutputStream("iTextTable.pdf"));
+            PdfWriter.getInstance(document, new FileOutputStream("Portfolio.pdf"));
 
             document.open();
             document.add(addHeader(statistics));
-            document.add(addPortfolioTable());
-            /*PdfPTable table = new PdfPTable(1);
-            addTextCenter(table, statistics);*/
+            document.add(addPortfolioName(statistics.getPortfolio().getPortfolioName()));
+            document.add(addPortfolioTable(statistics));
 
-
-
-            /*addTableHeader(table);
-            addRows(table);*/
-            /*addCustomRows(table);*/
-
-            /* document.add(table);*/
             document.close();
         } catch (Exception e) {
 
@@ -61,45 +43,24 @@ public class PdfBuilder {
 
     private Paragraph addHeader(YearlyStatistics statistics) {
         String text = "Årsbesked " + statistics.getYear();
-        return components.getParagraph(text, Element.ALIGN_CENTER, 12, Font.NORMAL);
+        Paragraph paragraph = components.createParagraph(text, Element.ALIGN_CENTER, 14, Font.NORMAL, 10L);
+        return paragraph;
     }
 
+    //TODO Fix alignment
+    private Paragraph addPortfolioName(String portfolioName) {
+        String text = "Portfölj: " + portfolioName;
+        Paragraph paragraph = components.createParagraph(text, Element.ALIGN_LEFT, 8, Font.NORMAL, 5L);
+        return paragraph;
+    }
 
-    private PdfPTable addPortfolioTable() {
-        PdfPTable table = new PdfPTable(6);
-        Stream.of("Namn", "Antal", "Gav", "Investerat", "Sålt", "Vinst")
-                .forEach(columnTitle -> {
-                    PdfPCell header = new PdfPCell();
-                    header.setBackgroundColor(BaseColor.LIGHT_GRAY);
-                    header.setBorderWidth(1);
-                    header.setPhrase(new Phrase(columnTitle));
-                    table.addCell(header);
-                });
+    private PdfPTable addPortfolioTable(YearlyStatistics statistics) {
+        List<String> columns = List.of("Aktie", "Antal", "Gav", "Investerat", "Sålt", "Vinst");
+        int[] columnWidths = {2, 1, 1, 2, 1, 1};
+
+        PdfPTable table = components.createTable(columnWidths);
+        table = components.createColumns(table, columns, 14, Font.BOLD, BaseColor.LIGHT_GRAY);
+        table = components.createRows(table, statistics);
         return table;
-    }
-
-
-    private void addRows(PdfPTable table) {
-        table.addCell("row 1, col 1");
-        table.addCell("row 1, col 2");
-        table.addCell("row 1, col 3");
-    }
-
-    private void addCustomRows(PdfPTable table)
-            throws URISyntaxException, BadElementException, IOException {
-        Path path = Paths.get(ClassLoader.getSystemResource("Java_logo.png").toURI());
-        Image img = Image.getInstance(path.toAbsolutePath().toString());
-        img.scalePercent(10);
-
-        PdfPCell imageCell = new PdfPCell(img);
-        table.addCell(imageCell);
-
-        PdfPCell horizontalAlignCell = new PdfPCell(new Phrase("row 2, col 2"));
-        horizontalAlignCell.setHorizontalAlignment(Element.ALIGN_CENTER);
-        table.addCell(horizontalAlignCell);
-
-        PdfPCell verticalAlignCell = new PdfPCell(new Phrase("row 2, col 3"));
-        verticalAlignCell.setVerticalAlignment(Element.ALIGN_BOTTOM);
-        table.addCell(verticalAlignCell);
     }
 }
